@@ -8,18 +8,43 @@ using namespace cq;
 using namespace std;
 using Message = cq::message::Message;
 using MessageSegment = cq::message::MessageSegment;
+void trim(string &s);
 
 CQ_INIT {
     on_enable([] { logging::info("启用", "插件已启用"); });
+    //on_private_message([](const PrivateMessageEvent &e) {
+    //    try {
+    //        auto msgid = send_private_message(e.user_id, e.message); // 直接复读消息
+    //        logging::info_success("私聊", "私聊消息复读完成, 消息 Id: " + to_string(msgid));
+    //        //send_message(e.target,
+    //        //             MessageSegment::face(111) + "这是通过 message 模块构造的消息~"); // 使用 message 模块构造消息
+    //    } catch (ApiError &e) {
+    //        logging::warning("私聊", "私聊消息复读失败, 错误码: " + to_string(e.code));
+    //    }
+    //});
 
-    on_private_message([](const PrivateMessageEvent &e) {
+    on_message([](const MessageEvent &e) {
         try {
-            auto msgid = send_private_message(e.user_id, e.message); // 直接复读消息
-            logging::info_success("私聊", "私聊消息复读完成, 消息 Id: " + to_string(msgid));
-            send_message(e.target,
-                         MessageSegment::face(111) + "这是通过 message 模块构造的消息~"); // 使用 message 模块构造消息
+            string message(e.message);
+            trim(message);
+            if (message.find("火星") != message.npos) {
+                logging::debug("检测到火星："," 火星你🐴呢23333");
+                send_message(e.target, "火星你🐴呢 天天就知道火星");
+            } else if (message.find("火昕") != message.npos || message.find("煋") != message.npos
+                       || message.find("🔥⭐") != message.npos) {
+                logging::debug("检测到谐音：", " 火星你🐴呢23333");
+                send_message(e.target, "火星你🐴呢 害搁这跟我玩谐音");
+            } else if (message.find("mars") != message.npos||message.find("Mars") != message.npos) {
+                logging::debug("检测到英文：", " 火星你🐴呢23333");
+                send_message(e.target, "火星你🐴呢 当我看不懂英文？");
+            } else if (message.find(MessageSegment::emoji(128293) + MessageSegment::emoji(10024)) != message.npos
+                       || message.find(MessageSegment::emoji(128293) + MessageSegment::emoji(11088))
+                              != message.npos || message.find(MessageSegment::emoji(128293) + MessageSegment::emoji(127775))!= message.npos) {
+                logging::debug("检测到emoji：", " 火星你🐴呢23333");
+                send_message(e.target, "火星你🐴呢 现在emoji我也看得懂了");
+			}
         } catch (ApiError &e) {
-            logging::warning("私聊", "私聊消息复读失败, 错误码: " + to_string(e.code));
+            logging::warning("火星", "处理火星消息失败, 错误码: " + to_string(e.code));
         }
     });
 
@@ -63,4 +88,13 @@ CQ_MENU(menu_demo_1) {
 
 CQ_MENU(menu_demo_2) {
     send_private_message(10000, "测试");
+}
+
+void trim(string &s) {
+	int index = 0;
+    if (!s.empty()){
+		while ((index = s.find(' ', index)) != string::npos) {
+            s.erase(index, 1);
+        }
+    }
 }

@@ -1,12 +1,12 @@
 {
     "ret": 1,
     "apiver": 9,
-    "name": "填写应用名称",
+    "name": "火星守护者",
     "version": "1.0.0",
     "version_id": 1,
-    "author": "填写你的名字或 Id",
-    "description": "填写你的应用描述",
-    "event": [ // 可以修改 priority 来调整插件的优先级, 其它字段不可修改, 否则将无法使用
+    "author": "YuXin Wu",
+    "description": "自动火星嘴臭机器人",
+    "event": [
         {
             "id": 1003,
             "type": 1003,
